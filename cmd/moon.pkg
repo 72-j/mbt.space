@@ -1,0 +1,9 @@
+// moonspace/cmd —— typed codegen 再生入口（A2 落形）
+import {
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/core/encoding/utf8",
+  "thy1016/moonspace/gen",
+}
+
+pkgtype(kind: "executable")

@@ -1,0 +1,106 @@
+# ==========================================================
+# moonspace 2.0 Domain TOML —— AgentSpace 骨架文件（词表声明面）
+#
+# 装配役词表合同对（moonxllm ToolLoop 控制面解空间化；消费位 =
+# moonxllm cmd/X3 装配位，拍④——moonspace 不进 agent 包白名单）。
+#
+# ★ 事件拆臂口径（2026-10-11 钉①补）：供方翻译位把世界翻成已判定
+#   事件——LLM 供方一次响应（LLMResponse）按 stop 值拆臂：
+#     stop=EndTurn → LLMFinal{answer}    （终答到）
+#     stop=ToolUse → LLMToolCalls{calls} （工具调用清单到，Json 载荷）
+#   拆臂令转移表保持 from+on 唯一（役3 行为闭合门）——Mealy 静态表
+#   不做值分支，分支判定收进 SpaceHandler（装配位）。
+# ★ 守卫面零声明（钉②补，R-9 入册）：allow_tool 工具许可不进
+#   guards（面混禁）——工具许可留 SpaceHandler 域内哨兵面（policy
+#   判否 → ToolDenied 哨兵事件回灌，dispatch_one 先例）；guards 留
+#   给解空间数据条件谓词（has_hits 形），本空间 v1 无。
+# ==========================================================
+
+[meta]
+schema_version = "2.0"
+space_version = "1.0"
+name = "agent_space"
+dialect = "moonspace"
+prefix = "Agent"
+
+[space]
+strategy = "Mealy"
+effects_trait_open = true
+interpretation = "cps"
+
+# ---- Context（解空间数据槽位）----
+[[space.context]]
+name = "goal"
+type = "String?"
+semantics = "slot"
+doc = "回合目标（GoalReady 装填；轮内不变）"
+
+[[space.context]]
+name = "last_answer"
+type = "String?"
+semantics = "slot"
+doc = "终答（LLMFinal 落槽；Completed 出口读）"
+
+[[space.context]]
+name = "last_tool"
+type = "String?"
+semantics = "slot"
+doc = "最近工具名（ToolDone 落槽，异名映射 tool→last_tool；审计面读）"
+
+# ---- 事件（拆臂口径见头注）----
+[[space.events]]
+name = "GoalReady"
+payload = [{ name = "goal", type = "String" }]
+
+[[space.events]]
+name = "LLMFinal"
+payload = [{ name = "answer", type = "String" }]
+
+[[space.events]]
+name = "LLMToolCalls"
+payload = [{ name = "calls", type = "Json" }]
+
+[[space.events]]
+name = "ToolDone"
+payload = [
+  { name = "tool", type = "String" },
+  { name = "body", type = "String" },
+]
+
+[[space.events]]
+name = "ToolDenied"
+payload = [{ name = "name", type = "String" }]
+
+# ---- 效应 ----
+# LLMCall：计费调用（command，对位 reasoning_space 演示口径）；prompt
+# 由 SpaceHandler 从 transcript+goal 组装（协议序面在 handler），不走
+# 事件投影——payload 空声明。
+[[space.effects]]
+name = "LLMCall"
+semantics = "command"
+
+# ToolExec：工具分派（command——改世界面，须审计禁自动重试）；炸转
+# 哨兵回执在 handler 域内（拍③），逃逸才 HandlerError。
+[[space.effects]]
+name = "ToolExec"
+semantics = "command"
+payload = [{ name = "calls", type = "Json" }]
+
+# ---- 具名守卫：零声明（钉②补口径见头注）----
+
+# ---- 状态 ----
+[[space.states]]
+name = "Idle"
+is_initial = true
+
+[[space.states]]
+name = "Thinking"
+doc = "LLM 轮（LLMCall 已发出待供方）"
+
+[[space.states]]
+name = "ToolCalling"
+doc = "工具分派轮（ToolExec 已发出待回执）"
+
+[[space.states]]
+name = "Answered"
+doc = "吸收终态（终答落槽；Completed 出口）"

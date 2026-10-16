@@ -1,0 +1,95 @@
+# ==========================================================
+# moonspace 2.0 Domain TOML —— RetrievalSpace 骨架文件（词表声明面）
+#
+# 切法裁决（对齐 rdf/adr.md ADR-1 骨架/行为切）：
+#   本文件 = [meta] + [space] strategy + context/events/effects/
+#   states/guards —— 全部词表骨架；
+#   行为（[[space.transitions]] + [[space.invariants]]）在
+#   retrieval_domain.toml。
+# 端口中立纪律：BM25/向量/图谱等业务词只住本数据文件（演示场景
+#   取自 .mingspace/tensor.md RetrievalSpace 原样），生成器代码
+#   零业务词——生成器只认 semantics 封闭词表与结构角色。
+# ==========================================================
+
+[meta]
+schema_version = "2.0"      # 仓规：Spec 演进维度（必填；§Version Router 消费）
+space_version = "1.0"       # 解空间协议维度（可选；生成器不解释，仅元数据）
+name = "retrieval_space"    # 产物标识（组合面 [[parallel]].spaces 等按名引用）
+dialect = "moonspace"       # 方言键（路由词表 + 落 Meta）
+prefix = "Retrieval"        # 生成类型前缀：RetrievalState/RetrievalEvent/RetrievalEffect/RetrievalCtx
+
+[space]
+# 转移形态（C-* 显式门）：coalgebraic 自动机 Mealy 形
+#   State × Event → (State × Effect)
+# 转移纯函数；effect 由 handler 解释；持久化/权限/审计留 Port 层
+strategy = "Mealy"
+# handler trait 发 pub(open)：runtime 包以自有 Port 实现跨包接
+# （对齐 nquads [parser].actions_trait_open 数据驱动开关先例）
+effects_trait_open = true
+# 解释形态：现役仅 cps = 单层 continuation（CPS 纪律红线：禁任意
+# continuation 捕获；回调必带超时与取消）
+interpretation = "cps"
+
+# ---- Context（解空间数据槽位）：slot 语义，对齐 parser.context 先例 ----
+# 注意：当前所处状态由状态机持有，不在此声明；此处只声明跨转移携带的业务数据
+[[space.context]]
+name = "query_text"
+type = "String?"
+semantics = "slot"
+
+[[space.context]]
+name = "hits"
+type = "Array[String]"
+semantics = "slot"
+doc = "上一通道检索命中（跨通道传递）"
+
+# ---- 事件（§events）：声明序即枚举序；payload 可省（无载荷事件不写 payload）----
+[[space.events]]
+name = "Query"
+payload = [{ name = "text", type = "String" }]
+
+[[space.events]]
+name = "BM25Done"
+payload = [{ name = "hits", type = "Array[String]" }]
+
+[[space.events]]
+name = "VectorDone"
+payload = [{ name = "hits", type = "Array[String]" }]
+
+# ---- 效应（§effects）：semantics 封闭词表 ----
+# ★ 生成器唯一可硬编码的业务无关词（宪法：词表即数据）。五值定案：
+#   query    = 只读/幂等/可重试，审计从轻（检索、展开类）
+#   command  = 改世界，必须审计，不许自动重试（写入类；缺省值）
+#   commit   = 事务边界·提交（对应 Port 层事务提交）
+#   rollback = 逆转·回滚（对应 Port 层事务回滚）
+#   stop     = 终止事件源（闭环不再回喂）
+[[space.effects]]
+name = "BM25Search"
+semantics = "query"
+payload = [{ name = "query", type = "String" }]
+
+[[space.effects]]
+name = "VectorSearch"
+semantics = "query"
+payload = [{ name = "query", type = "Array[String]" }]   # typed 实锤迁移（2026-10-11）：以命中集为查询集
+
+# ---- 具名 guard（C-21 白盒面；转移行按名引用；谓词本体在 verify 包/stub 区手写）----
+# guard 判的是转移前 ctx（上一跳 assign 的产物）；拒绝时转移不发生，无 effect 无状态变更
+[[space.guards]]
+name = "has_hits"
+doc = "ctx.hits 非空"
+
+# ---- 状态（§states）：声明序即枚举序；is_initial 全表恰一 ----
+[[space.states]]
+name = "Idle"
+is_initial = true
+
+[[space.states]]
+name = "SearchingBM25"
+
+[[space.states]]
+name = "SearchingVector"
+
+[[space.states]]
+name = "Done"
+doc = "终止态（series 源头/组合面可达性终点）"

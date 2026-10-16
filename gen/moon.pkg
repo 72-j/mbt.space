@@ -1,0 +1,22 @@
+// gen:解空间生成器(第四件;.mingspace/effect.md 大 gen 路线)。
+// 职责:读 domain/*.toml 合同,产表驱动状态机+CPS 单层 dispatch+
+// 可达性剪枝+属性测试骨架+Port stub。gen 只生成:枚举/转移表/
+// dispatch/可达性/属性骨架/stub;不生成:Port 实现/DB 写入/LLM
+// 细节/错误恢复(留 Port 与 Control Plane——职责边界)。
+// contract.mbt = TOML 字段契约的可执行镜像;解析器(@toml 0.5)随
+// 解析役接 import。
+
+import {
+  "moonbit-community/toml",
+  "moonbitlang/core/debug",
+  "thy1016/moonspace/space",
+}
+
+// 对照门(黑盒)授权:读真实 domain/*.toml 漂移即红(scope_gate 先例)
+// + 构造门(sample 合同→运行形结构面断言)
+import {
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/core/encoding/utf8",
+  "thy1016/moonspace/space",
+} for "test"

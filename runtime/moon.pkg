@@ -1,0 +1,19 @@
+// runtime:Runtime Sandbox(运行空间沙箱;三沙箱之二,.mingspace/sandbox.md 划界)。
+// 职责:约束副作用执行——Port 权限/资源限制/超时/审计,防 effect
+// 逃逸到生产数据。役4 落码:EffectHandler 直返形(async 对位 CPS 单层)
+// + 沙箱大 loop runner(双预算+审计+feedback 显式回送)。
+// 依赖向下 space(R-7);moonxllm 适配落对方 cmd/X3 装配位(拍④)。
+// core/debug: RunGateError derive(Debug) 显式 extend(评审 A3 门错面)。
+import {
+  "moonbitlang/core/debug",
+  "thy1016/moonspace/space",
+}
+
+// 大 loop 集成门(黑盒):合同面吃 sample fixture(真实文件漂移由
+// gen 对照门钉);async test 授权 + 合同构造器 + 守卫谓词首件。
+import {
+  "moonbitlang/async",
+  "thy1016/moonspace/gen",
+  "thy1016/moonspace/space",
+  "thy1016/moonspace/verify",
+} for "test"

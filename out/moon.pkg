@@ -1,0 +1,14 @@
+// moonspace/out —— typed 产物包（A2 落形：生成物纯生成禁手写 +
+// stubs.mbt 手写区，两区永不拼接——宪法）
+// 产物：demo_spaces_gen.mbt（gen emit_space_typed 经 cmd 再生链落盘）
+// 消费：typed 词表（枚举/Ctx/step）——行为对拍门（typed ≡ 解释器）
+// 为 typed codegen 次格。
+
+// test 授权：黄金门（重生成逐字节对拍，读真文件）
+import {
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/core/encoding/utf8",
+  "thy1016/moonspace/gen",
+  "thy1016/moonspace/space",
+} for "test"

@@ -1,0 +1,66 @@
+# ==========================================================
+# moonspace 2.0 Domain TOML —— AgentSpace 行为文件（转移表）
+#
+# ToolLoop.turn 递归的解空间化：LLM 轮（Thinking）与工具轮
+# （ToolCalling）自环回灌——环在状态图（self-loop），不走
+# composition feedback router（router = 到达态显式回送，本空间
+# 不用）；资源门走装配位 ResourceLimit 翻译（钉②），不占
+# composition 守卫。事件拆臂口径见 base 头注
+# （LLMResponse → LLMFinal + LLMToolCalls）。
+# ==========================================================
+
+[meta]
+schema_version = "2.0"
+name = "agent_space"
+dialect = "moonspace"
+prefix = "Agent"
+
+# ---- 装填（发效应行）----
+[[space.transitions]]
+from = "Idle"
+on = "GoalReady"
+to = "Thinking"
+effect = "LLMCall"
+args = []                   # LLMCall 无 payload——prompt 组装在 handler（见 base 头注）
+assign = ["goal"]           # goal 槽落 payload.goal（同名省略；审计/守卫面读）
+
+[[space.transitions]]
+from = "Thinking"
+on = "LLMToolCalls"
+to = "ToolCalling"
+effect = "ToolExec"
+args = ["calls"]            # 工具调用清单按名投影（Json 载荷）
+
+# ---- 工具轮回灌（自环：回执入轨再启 LLM 轮）----
+[[space.transitions]]
+from = "ToolCalling"
+on = "ToolDone"
+to = "Thinking"
+effect = "LLMCall"
+args = []
+assign = ["last_tool"]
+assign_from = [{ slot = "last_tool", from_field = "tool" }]   # 异名显式（拍②口径）
+
+[[space.transitions]]
+from = "ToolCalling"
+on = "ToolDenied"
+to = "Thinking"
+effect = "LLMCall"
+args = []                   # 判否哨兵同样回灌续轮（模型自适应改道，dispatch_one 先例）
+
+# ---- 终答（吸收态）----
+[[space.transitions]]
+from = "Thinking"
+on = "LLMFinal"
+to = "Answered"
+assign = ["last_answer"]    # answer 槽落 payload.answer（异名：下行显式映射）
+assign_from = [{ slot = "last_answer", from_field = "answer" }]
+
+# ---- 不变量声明 ----
+[[space.invariants]]
+name = "answered_absorbing"
+doc = "Answered 是吸收态：出边必须为零（Completed 出口）"
+
+[[space.invariants]]
+name = "llm_call_only_from_llm_rounds"
+doc = "LLMCall 只允许从 Thinking/ToolCalling 发出（计费效应转移面收窄）"

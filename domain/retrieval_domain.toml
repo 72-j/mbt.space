@@ -1,0 +1,52 @@
+# ==========================================================
+# moonspace 2.0 Domain TOML —— RetrievalSpace 行为文件（转移表）
+#
+# 只承载 [meta]（配对面，name 须与 base 一致）+ [[space.transitions]]
+# + [[space.invariants]]（骨架/行为切的"行为"半边，骨架见
+# retrieval_base.toml）。
+# 转移行四行属性（守卫转移定案）：guard / assign / args / effect。
+# 验收口径：转移表 from+on 组合唯一；to 与 effect 引用必须在骨架
+# 词表内闭合（gen 解析器核对；对照测试漂移即红）。
+# ==========================================================
+
+[meta]
+schema_version = "2.0"      # 仓规：Spec 演进维度（必填）
+name = "retrieval_space"    # 配对面：与 retrieval_base.toml 一致（check_space 钉）
+dialect = "moonspace"
+prefix = "Retrieval"
+
+# ---- 装填（发效应行：带 args 投影）----
+# args = effect 实参投影：按位取事件 payload 字段名（数据驱动，禁代码）
+
+[[space.transitions]]
+from = "Idle"
+on = "Query"
+to = "SearchingBM25"
+effect = "BM25Search"
+args = ["text"]
+assign = ["query_text"]     # query_text 槽落 payload.text（异名：下行显式；typed 实锤补装填）
+assign_from = [{ slot = "query_text", from_field = "text" }]
+
+[[space.transitions]]
+from = "SearchingBM25"
+on = "BM25Done"
+to = "SearchingVector"
+effect = "VectorSearch"
+args = ["hits"]
+assign = ["hits"]           # 落定后写 ctx.hits（值 = 事件 payload 同名投影）
+
+[[space.transitions]]
+from = "SearchingVector"
+on = "VectorDone"
+to = "Done"
+assign = ["hits"]           # 终态只落槽，不发效应（effect 缺省 = 无）
+guard = "has_hits"          # ctx.hits 来自上一跳（BM25Done）的 assign——守卫判转移前 ctx
+
+# ---- 不变量声明（名字面；谓词本体在 verify 包手写，gen 只产骨架）----
+[[space.invariants]]
+name = "done_absorbing"
+doc = "Done 是吸收态：出边必须为零"
+
+[[space.invariants]]
+name = "no_effect_after_done"
+doc = "Done 后任何事件不产生 effect"

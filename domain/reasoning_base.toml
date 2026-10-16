@@ -1,0 +1,66 @@
+# ==========================================================
+# moonspace 2.0 Domain TOML —— ReasoningSpace 骨架文件（词表声明面）
+#
+# 第二演示空间（场景取自 .mingspace/tensor.md ReasoningSpace 原样）：
+# series 的目标侧 + feedback 的宿主侧。骨架字段语义同
+# retrieval_base.toml 头注，不重复；本文件演示 guard 与 LLM 类效应。
+# ==========================================================
+
+[meta]
+schema_version = "2.0"
+space_version = "1.0"
+name = "reasoning_space"
+dialect = "moonspace"
+prefix = "Reasoning"
+
+[space]
+strategy = "Mealy"
+effects_trait_open = true
+interpretation = "cps"
+
+# ---- Context ----
+[[space.context]]
+name = "prompt"
+type = "String?"
+semantics = "slot"
+
+[[space.context]]
+name = "answer"
+type = "String?"
+semantics = "slot"
+
+[[space.context]]
+name = "context"
+type = "String?"
+semantics = "slot"
+doc = "回灌数据源槽（ContextReady.payload.context 同名落底；ReasoningLoop LoopBack 按名取槽合成回灌事件——评审 A1 投影闭合）"
+
+# ---- 事件 ----
+[[space.events]]
+name = "ContextReady"
+payload = [{ name = "context", type = "String" }]
+
+[[space.events]]
+name = "ThinkDone"
+payload = [{ name = "text", type = "String" }]
+
+# ---- 效应（LLMCall 演示 command 语义：改世界面为计费调用，须审计；
+#      重试策略由 Runtime Sandbox 资源面裁定，不进词表）----
+[[space.effects]]
+name = "LLMCall"
+semantics = "command"
+payload = [{ name = "prompt", type = "String" }]
+
+# ---- 具名 guard：本空间无守卫声明（守卫词表演示见 retrieval_base.toml）----
+
+# ---- 状态 ----
+[[space.states]]
+name = "Waiting"
+is_initial = true
+
+[[space.states]]
+name = "Thinking"
+
+[[space.states]]
+name = "Answered"
+doc = "终止态（feedback 回送源/series 终点）"

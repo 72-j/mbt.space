@@ -1,0 +1,15 @@
+# moonspace proj dialect (moonxr ops_projgen v1.6 stdin contract).
+# Generate:
+#   cat moonspace/proj_dialect.toml | moon run moonxr/ops_projgen.mbtx
+#     | awk assembly (see moonxr/README.md "用项目方言开整棵包树")
+# pkgs intentionally empty: the four pkgs (space/runtime/verify/gen) were
+# hand-planted in battle 1; each moon.pkg's comment face is the hand-written
+# maintenance surface, so no [[pkg]] rows here -- this file manages the
+# module-root artifacts only (moon.mod / .gitignore).
+
+[project]
+mode = "standalone"
+module = "thy1016/moonspace"
+version = "0.1.0"
+deps = []
+ignores = ["_build/", ".mooncakes/", ".mingspace/", ".playground/"]

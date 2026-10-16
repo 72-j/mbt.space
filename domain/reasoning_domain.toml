@@ -1,0 +1,40 @@
+# ==========================================================
+# moonspace 2.0 Domain TOML —— ReasoningSpace 行为文件（转移表）
+#
+# 演示 command 语义效应（LLMCall）与纯装填行。assign 值投影口径
+# （2026-10-11 拍）：槽位默认同名投影（同名省略）；异名经
+# assign_from = [{ slot, from_field }] 显式映射。守卫演示见
+# retrieval_domain.toml（守卫判的是转移前 ctx，须有上一跳 assign
+# 垫底才接线）。
+# ==========================================================
+
+[meta]
+schema_version = "2.0"      # 仓规：Spec 演进维度（必填）
+name = "reasoning_space"    # 配对面：与 reasoning_base.toml 一致（check_space 钉）
+dialect = "moonspace"
+prefix = "Reasoning"
+
+[[space.transitions]]
+from = "Waiting"
+on = "ContextReady"
+to = "Thinking"
+effect = "LLMCall"
+args = ["context"]
+assign = ["context", "prompt"]  # context 槽同名落底（LoopBack 回灌数据源，评审 A1）；prompt 槽异名：下行显式映射
+assign_from = [{ slot = "prompt", from_field = "context" }]
+
+[[space.transitions]]
+from = "Thinking"
+on = "ThinkDone"
+to = "Answered"
+assign = ["answer"]         # answer 槽落 payload.text（异名：下行显式映射）
+assign_from = [{ slot = "answer", from_field = "text" }]
+
+# ---- 不变量声明 ----
+[[space.invariants]]
+name = "answered_absorbing"
+doc = "Answered 是吸收态：出边必须为零（回送走 feedback LoopBack 事件，不占状态出边）"
+
+[[space.invariants]]
+name = "llm_only_from_waiting"
+doc = "LLMCall 只允许从 Waiting 发出（计费效应转移面收窄）"

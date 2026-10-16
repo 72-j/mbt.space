@@ -1,0 +1,251 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "thy1016/moonspace/gen"
+
+import {
+  "moonbitlang/core/debug",
+  "thy1016/moonspace/space",
+}
+
+// Values
+pub fn check_composition(Composition, Map[String, SpaceBase]) -> Unit raise
+
+pub fn check_space(SpaceBase, SpaceDomain) -> Unit raise
+
+pub fn check_space_base(SpaceBase) -> Unit raise
+
+pub fn emit_handler_stub(SpaceBase) -> String
+
+pub fn emit_space_typed(SpaceBase, SpaceDomain) -> String raise
+
+pub fn normalize_assigns(SpaceBase, SpaceDomain) -> SpaceDomain
+
+pub fn parallel_declared_pairs(@space.ParallelForm) -> Int
+
+pub fn parallel_from_contract(SpaceBase, SpaceDomain, SpaceBase, SpaceDomain, ParallelDecl) -> @space.ParallelForm raise
+
+pub fn parse_composition(String) -> Composition raise
+
+pub fn parse_space_base(String) -> SpaceBase raise
+
+pub fn parse_space_domain(String) -> SpaceDomain raise
+
+pub fn sample_composition() -> Composition
+
+pub fn sample_reasoning_base() -> SpaceBase
+
+pub fn sample_reasoning_domain() -> SpaceDomain
+
+pub fn sample_retrieval_base() -> SpaceBase
+
+pub fn sample_retrieval_domain() -> SpaceDomain
+
+pub fn series_from_contract(SpaceBase, SpaceDomain, SpaceBase, SpaceDomain, SeriesDecl) -> @space.SeriesForm raise
+
+pub fn space_from_contract(SpaceBase, SpaceDomain, Array[FeedbackDecl]) -> @space.EffectSpace raise
+
+// Errors
+pub(all) suberror ContractError {
+  MissingKeyErr(String)
+  TypeErr(String)
+  ValueErr(String)
+} derive(@debug.Debug)
+pub fn ContractError::to_repr(Self) -> @debug.Repr
+
+// Types and methods
+pub struct AssignFrom {
+  slot : String
+  from_field : String
+} derive(Eq, @debug.Debug)
+pub fn AssignFrom::equal(Self, Self) -> Bool
+pub fn AssignFrom::not_equal(Self, Self) -> Bool
+pub fn AssignFrom::to_repr(Self) -> @debug.Repr
+
+pub(all) struct CellDecl {
+  name : String
+  effect : String
+  form : String
+  fields : Array[String]
+  error_event : String
+  doc : String?
+} derive(Eq, @debug.Debug)
+pub fn CellDecl::equal(Self, Self) -> Bool
+pub fn CellDecl::not_equal(Self, Self) -> Bool
+pub fn CellDecl::to_repr(Self) -> @debug.Repr
+
+pub struct Composition {
+  meta : ContractMeta
+  parallels : Array[ParallelDecl]
+  series : Array[SeriesDecl]
+  feedbacks : Array[FeedbackDecl]
+} derive(Eq, @debug.Debug)
+pub fn Composition::equal(Self, Self) -> Bool
+pub fn Composition::not_equal(Self, Self) -> Bool
+pub fn Composition::to_repr(Self) -> @debug.Repr
+
+pub struct ContractMeta {
+  schema_version : String
+  space_version : String?
+  name : String
+  dialect : String?
+  prefix : String
+} derive(Eq, @debug.Debug)
+pub fn ContractMeta::equal(Self, Self) -> Bool
+pub fn ContractMeta::not_equal(Self, Self) -> Bool
+pub fn ContractMeta::to_repr(Self) -> @debug.Repr
+
+pub struct CtxField {
+  name : String
+  type_ : String
+  semantics : String?
+  doc : String?
+} derive(Eq, @debug.Debug)
+pub fn CtxField::equal(Self, Self) -> Bool
+pub fn CtxField::not_equal(Self, Self) -> Bool
+pub fn CtxField::to_repr(Self) -> @debug.Repr
+
+pub struct EffectDecl {
+  name : String
+  semantics : String
+  payload : Array[PayloadField]
+} derive(Eq, @debug.Debug)
+pub fn EffectDecl::equal(Self, Self) -> Bool
+pub fn EffectDecl::not_equal(Self, Self) -> Bool
+pub fn EffectDecl::to_repr(Self) -> @debug.Repr
+
+pub struct EventDecl {
+  name : String
+  payload : Array[PayloadField]
+} derive(Eq, @debug.Debug)
+pub fn EventDecl::equal(Self, Self) -> Bool
+pub fn EventDecl::not_equal(Self, Self) -> Bool
+pub fn EventDecl::to_repr(Self) -> @debug.Repr
+
+pub struct FeedbackDecl {
+  name : String
+  space : String
+  router : Array[StateEventBridge]
+  loop_guard : FeedbackGuard?
+} derive(Eq, @debug.Debug)
+pub fn FeedbackDecl::equal(Self, Self) -> Bool
+pub fn FeedbackDecl::not_equal(Self, Self) -> Bool
+pub fn FeedbackDecl::to_repr(Self) -> @debug.Repr
+
+pub struct FeedbackGuard {
+  max_rounds : Int
+  timeout_ms : Int
+} derive(Eq, @debug.Debug)
+pub fn FeedbackGuard::equal(Self, Self) -> Bool
+pub fn FeedbackGuard::not_equal(Self, Self) -> Bool
+pub fn FeedbackGuard::to_repr(Self) -> @debug.Repr
+
+pub struct GuardDecl {
+  name : String
+  doc : String?
+} derive(Eq, @debug.Debug)
+pub fn GuardDecl::equal(Self, Self) -> Bool
+pub fn GuardDecl::not_equal(Self, Self) -> Bool
+pub fn GuardDecl::to_repr(Self) -> @debug.Repr
+
+pub struct InvariantDecl {
+  name : String
+  doc : String?
+} derive(Eq, @debug.Debug)
+pub fn InvariantDecl::equal(Self, Self) -> Bool
+pub fn InvariantDecl::not_equal(Self, Self) -> Bool
+pub fn InvariantDecl::to_repr(Self) -> @debug.Repr
+
+pub struct ParallelDecl {
+  name : String
+  spaces : Array[String]
+  sync : Array[String]
+  merge_effects : String
+} derive(Eq, @debug.Debug)
+pub fn ParallelDecl::equal(Self, Self) -> Bool
+pub fn ParallelDecl::not_equal(Self, Self) -> Bool
+pub fn ParallelDecl::to_repr(Self) -> @debug.Repr
+
+pub struct PayloadField {
+  name : String
+  type_ : String
+} derive(Eq, @debug.Debug)
+pub fn PayloadField::equal(Self, Self) -> Bool
+pub fn PayloadField::not_equal(Self, Self) -> Bool
+pub fn PayloadField::to_repr(Self) -> @debug.Repr
+
+pub struct SeriesDecl {
+  name : String
+  source : String
+  target : String
+  adapter : Array[StateEventBridge]
+} derive(Eq, @debug.Debug)
+pub fn SeriesDecl::equal(Self, Self) -> Bool
+pub fn SeriesDecl::not_equal(Self, Self) -> Bool
+pub fn SeriesDecl::to_repr(Self) -> @debug.Repr
+
+pub struct SpaceBase {
+  meta : ContractMeta
+  policy : SpacePolicy
+  context : Array[CtxField]
+  events : Array[EventDecl]
+  effects : Array[EffectDecl]
+  guards : Array[GuardDecl]
+  states : Array[StateDecl]
+} derive(Eq, @debug.Debug)
+pub fn SpaceBase::equal(Self, Self) -> Bool
+pub fn SpaceBase::not_equal(Self, Self) -> Bool
+pub fn SpaceBase::to_repr(Self) -> @debug.Repr
+
+pub struct SpaceDomain {
+  meta : ContractMeta
+  transitions : Array[TransitionDecl]
+  invariants : Array[InvariantDecl]
+  cells : Array[CellDecl]
+} derive(Eq, @debug.Debug)
+pub fn SpaceDomain::equal(Self, Self) -> Bool
+pub fn SpaceDomain::not_equal(Self, Self) -> Bool
+pub fn SpaceDomain::to_repr(Self) -> @debug.Repr
+
+pub struct SpacePolicy {
+  strategy : String
+  effects_trait_open : Bool
+  interpretation : String
+} derive(Eq, @debug.Debug)
+pub fn SpacePolicy::equal(Self, Self) -> Bool
+pub fn SpacePolicy::not_equal(Self, Self) -> Bool
+pub fn SpacePolicy::to_repr(Self) -> @debug.Repr
+
+pub struct StateDecl {
+  name : String
+  is_initial : Bool
+  doc : String?
+} derive(Eq, @debug.Debug)
+pub fn StateDecl::equal(Self, Self) -> Bool
+pub fn StateDecl::not_equal(Self, Self) -> Bool
+pub fn StateDecl::to_repr(Self) -> @debug.Repr
+
+pub struct StateEventBridge {
+  from_state : String
+  to_event : String
+} derive(Eq, @debug.Debug)
+pub fn StateEventBridge::equal(Self, Self) -> Bool
+pub fn StateEventBridge::not_equal(Self, Self) -> Bool
+pub fn StateEventBridge::to_repr(Self) -> @debug.Repr
+
+pub struct TransitionDecl {
+  from_state : String
+  on_event : String
+  to_state : String
+  effect : String?
+  args : Array[String]
+  assign : Array[String]
+  assign_from : Array[AssignFrom]
+  guard_name : String?
+  doc : String?
+} derive(Eq, @debug.Debug)
+pub fn TransitionDecl::equal(Self, Self) -> Bool
+pub fn TransitionDecl::not_equal(Self, Self) -> Bool
+pub fn TransitionDecl::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

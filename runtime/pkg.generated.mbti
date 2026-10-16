@@ -1,0 +1,92 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "thy1016/moonspace/runtime"
+
+import {
+  "moonbitlang/core/debug",
+  "thy1016/moonspace/space",
+}
+
+// Values
+pub async fn[T : EffectHandler] run(@space.EffectSpace, T, ResourceLimit, () -> Int64, Map[String, (Map[String, @space.CtxValue]) -> Bool], @space.LoopEvent, observer? : ((Observation) -> Unit)?, should_cancel? : (() -> Bool)?) -> LoopReport
+
+pub async fn[T : EffectHandler] run_parallel(@space.ParallelForm, T, ResourceLimit, () -> Int64, Map[String, (Map[String, @space.CtxValue]) -> Bool], @space.LoopEvent, @space.LoopEvent) -> ParallelReport
+
+pub async fn[T : EffectHandler] run_series(@space.SeriesForm, T, ResourceLimit, () -> Int64, Map[String, (Map[String, @space.CtxValue]) -> Bool], @space.LoopEvent) -> SeriesReport
+
+// Errors
+pub(all) suberror RunGateError {
+  UnboundedCycle(space~ : String)
+} derive(@debug.Debug)
+pub fn RunGateError::to_repr(Self) -> @debug.Repr
+
+// Types and methods
+pub struct AuditRecord {
+  round : Int
+  effect_name : String
+  semantics : String
+  started_ms : Int64
+  finished_ms : Int64
+  attempt : Int
+  result_event : String
+  outcome : String
+}
+
+pub(all) enum DeadEndKind {
+  NoRule(state~ : String, event~ : String)
+  GuardRejected(name~ : String)
+  MissingGuard(name~ : String)
+  Stall(state~ : String)
+}
+
+pub struct LoopReport {
+  final_state : String
+  rounds : Int
+  terminated_by : Termination
+  audit : Array[AuditRecord]
+  final_ctx : Map[String, @space.CtxValue]
+}
+
+pub(all) enum Observation {
+  StepStarted(round~ : Int, state~ : String, event~ : String)
+  EffectFinished(round~ : Int, effect~ : String, outcome~ : String, result_event~ : String)
+  Finished(round~ : Int, state~ : String, termination~ : Termination)
+}
+
+pub struct ParallelReport {
+  state0 : String
+  state1 : String
+  rounds : Int
+  terminated_by : Termination
+  audit : Array[AuditRecord]
+}
+
+pub(all) struct ResourceLimit {
+  max_rounds : Int
+  timeout_ms : Int
+  effect_timeout_ms : Int
+  max_retries : Int
+}
+
+pub struct SeriesReport {
+  final_state : String
+  rounds : Int
+  terminated_by : Termination
+  audit : Array[AuditRecord]
+  bridge_fired : Bool
+}
+
+pub(all) enum Termination {
+  Completed
+  MaxRounds
+  Timeout
+  Cancelled
+  DeadEnd(DeadEndKind)
+  HandlerError(String)
+}
+
+// Type aliases
+
+// Traits
+pub(open) trait EffectHandler {
+  async fn handle(Self, @space.LoopEffect) -> @space.LoopEvent
+}

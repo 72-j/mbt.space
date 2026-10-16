@@ -1,0 +1,124 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "thy1016/moonspace/out"
+
+// Values
+pub fn vibe_cells() -> Array[VibeCell]
+
+// Errors
+
+// Types and methods
+pub(all) struct AgentCtx {
+  goal : String?
+  last_answer : String?
+  last_tool : String?
+}
+
+pub(all) enum AgentEffect {
+  LLMCall
+  ToolExec(Json)
+}
+
+pub(all) enum AgentEvent {
+  GoalReady(String)
+  LLMFinal(String)
+  LLMToolCalls(Json)
+  ToolDone(String, String)
+  ToolDenied(String)
+}
+
+pub(all) enum AgentState {
+  Idle
+  Thinking
+  ToolCalling
+  Answered
+}
+pub fn AgentState::initial() -> Self
+pub fn AgentState::step(Self, AgentCtx, AgentEvent, (String, AgentCtx) -> Bool) -> (Self, AgentCtx, AgentEffect?)?
+
+pub(all) struct ReasoningCtx {
+  prompt : String?
+  answer : String?
+  context : String?
+}
+
+pub(all) enum ReasoningEffect {
+  LLMCall(String)
+}
+
+pub(all) enum ReasoningEvent {
+  ContextReady(String)
+  ThinkDone(String)
+}
+
+pub(all) enum ReasoningState {
+  Waiting
+  Thinking
+  Answered
+}
+pub fn ReasoningState::initial() -> Self
+pub fn ReasoningState::step(Self, ReasoningCtx, ReasoningEvent, (String, ReasoningCtx) -> Bool) -> (Self, ReasoningCtx, ReasoningEffect?)?
+
+pub(all) struct RetrievalCtx {
+  query_text : String?
+  hits : Array[String]
+}
+
+pub(all) enum RetrievalEffect {
+  BM25Search(String)
+  VectorSearch(Array[String])
+}
+
+pub(all) enum RetrievalEvent {
+  Query(String)
+  BM25Done(Array[String])
+  VectorDone(Array[String])
+}
+
+pub(all) enum RetrievalState {
+  Idle
+  SearchingBM25
+  SearchingVector
+  Done
+}
+pub fn RetrievalState::initial() -> Self
+pub fn RetrievalState::step(Self, RetrievalCtx, RetrievalEvent, (String, RetrievalCtx) -> Bool) -> (Self, RetrievalCtx, RetrievalEffect?)?
+
+pub(all) struct VibeCell {
+  name : String
+  effect : String
+  form : String
+  fields : Array[String]
+  error_event : String
+}
+
+pub(all) struct VibeCtx {
+  goal : String?
+  check_reason : String?
+  result_summary : String?
+}
+
+pub(all) enum VibeEffect {
+  LLMAct(String)
+  ShellCheck
+}
+
+pub(all) enum VibeEvent {
+  TaskReady(String)
+  ActDone(String)
+  CheckGreen(String)
+  CheckFailed(String)
+}
+
+pub(all) enum VibeState {
+  Idle
+  Drafting
+  Checking
+  Fixing
+  Answered
+}
+pub fn VibeState::initial() -> Self
+pub fn VibeState::step(Self, VibeCtx, VibeEvent, (String, VibeCtx) -> Bool) -> (Self, VibeCtx, VibeEffect?)?
+
+// Type aliases
+
+// Traits

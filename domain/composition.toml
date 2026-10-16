@@ -1,0 +1,58 @@
+# ==========================================================
+# moonspace 2.0 Domain TOML —— 组合面（Composition Spec）
+#
+# 三算子（.mingspace/tensor.md 定案）：
+#   parallel = 张量积（状态笛卡尔积 + interleaving；gen 必做可达性剪枝）
+#   series   = 串联（源终止态经 adapter 触发目标起始事件；gen 生成桥接转移）
+#   feedback = 反馈（显式 LoopBack 事件回送；守卫必填——禁任意 continuation 重入）
+# 空间引用按 [meta].name 闭合：本文件引用的 space 必须有已声明的
+# base+domain 文件对（gen 解析器核对）。
+# ==========================================================
+
+[meta]
+schema_version = "2.0"
+name = "demo_composition"
+dialect = "moonspace"
+prefix = "Comp"             # 组合产物前缀：CompSearchParallelState / CompRetrievalToReasoningEvent …
+
+# ---- parallel（张量积）----
+# spaces   = 参与空间名列表（≥2；同名可重复出现 = 自积，演示口径）
+# sync     = 共享事件集（事件名）：列名事件须两边同时匹配才走同步转移；
+#            空 = 纯 interleaving（每步只让一个子空间前进，另一个保持）
+# merge_effects = effect 签名合成（现役仅 union = 带来源标记并集）
+[[parallel]]
+name = "SearchParallel"
+spaces = ["retrieval_space", "retrieval_space"]
+sync = []
+merge_effects = "union"
+
+# ---- series（串联）----
+# source / target = 空间名；adapter = 桥接声明表：
+#   from_state = 源空间终止态（须为该空间已声明状态）
+#   to_event   = 目标空间起始事件（须为该空间已声明事件）
+# gen 按 adapter 生成桥接转移（源终止态触发目标初始态上的 to_event）
+[[series]]
+name = "RetrievalToReasoning"
+source = "retrieval_space"
+target = "reasoning_space"
+
+[[series.adapter]]
+from_state = "Done"
+to_event = "ContextReady"
+
+# ---- feedback（反馈）----
+# space  = 宿主空间名（单空间闭环；回送 = 显式 LoopBack 事件，不是 continuation 捕获）
+# router = 回送声明表：from_state（输出态）→ to_event（回灌输入事件）
+# guard  = 守卫必填：max_rounds / timeout_ms 至少启用其一（0 = 不启用）；
+#          守卫触发 ⇒ 终止并上报（非法转移域），词表不携带重试策略
+[[feedback]]
+name = "ReasoningLoop"
+space = "reasoning_space"
+
+[[feedback.router]]
+from_state = "Answered"
+to_event = "ContextReady"
+
+[feedback.guard]
+max_rounds = 5
+timeout_ms = 30000

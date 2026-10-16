@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "thy1016/moonspace/verify"
+
+import {
+  "thy1016/moonspace/space",
+}
+
+// Values
+pub fn check_post((String) -> Bool, String) -> Bool
+
+pub fn check_pre((String) -> Bool, String) -> Bool
+
+pub fn[State, Event] check_triple((State) -> Bool, (State, Event) -> State, (State, Event, State) -> Bool, State, Event) -> Bool
+
+pub fn has_hits(Map[String, @space.CtxValue]) -> Bool
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

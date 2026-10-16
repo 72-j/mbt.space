@@ -1,0 +1,10 @@
+// space:EffectSpace Sandbox(解空间沙箱;三沙箱之一,.mingspace/sandbox.md 划界)。
+// 职责:约束解空间——合法状态/合法事件/可产生 effect;Mealy 纯转移,
+// effect 由 handler 解释,持久化/权限/审计留 Port 层不漂进 handler。
+// 具体词表由 gen 从 domain/*.toml 构造(役4 数据驱动运行形,loop_types);
+// 本包只放业务无关机器件。
+// 零业务依赖(纯类型面;Json 为内建型,CtxValue JsonVal 臂不引包)。
+// core/debug: GuardClosureError derive(Debug) 显式 extend(A2 门错面)。
+import {
+  "moonbitlang/core/debug",
+}

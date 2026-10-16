@@ -1,0 +1,17 @@
+// verify:Verification Sandbox(验证环境沙箱;三沙箱之三,.mingspace/verify.md 划界)。
+// 职责:约束可验证性——纯函数模型+事件序列生成+不变量检查;隔离的是
+// "验证环境"与"生产执行环境"。只吃 State/Event/Effect/Transition/
+// Invariant,零真实 Port 依赖(RocksDB/LLM/Git 一概不见,R-7)。
+// 谓词本体手写本包(has_hits/三元组面/qc 属性);gen 只产名字骨架。
+// A3 实证(2026-10-11):proof_* 关键字不在现役工具链;moon prove=
+// Why3 系需 SMT solver(环境缺)挂台账;现役面 = 轻量霍尔先形 + core
+// @qc 属性双轨。
+import {
+  "thy1016/moonspace/space",
+}
+
+// qc 属性门(黑盒)授权:core 内建 quickcheck 零依赖(A3 实证)
+import {
+  "moonbitlang/core/quickcheck" @qc,
+  "thy1016/moonspace/space",
+} for "test"

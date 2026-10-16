@@ -1,0 +1,101 @@
+# ==========================================================
+# moonspace 2.0 Domain TOML —— VibeSpace 骨架文件（词表声明面）
+#
+# 任务级工作流子状态机（役V3；"AI 生成子状态机"完全体首格）：vibe
+# coding 的 write→check→fix 环固化为相位机——状态机管流程纪律
+# （没 check 绿不算完成），LLM 管每步内容（LLMAct 相位指令）。
+# 消费位 = moonxllm cmd/vibe_assembly（AGENT_MODE=vibe 分派）。
+#
+# ★ check 拆臂口径（agent_space LLMResponse 拆臂同款）：ShellCheck
+#   效应的 handler 按退出码把世界翻成已判定事件——exit 0 → CheckGreen /
+#   非 0 → CheckFailed{reason}；Mealy 静态表不做值分支，分支判定在
+#   handler（装配位）。
+# ★ 环在状态图（Checking⇄Fixing），不走 composition feedback router
+#   （agent_space 同款口径）；预算走装配位 ResourceLimit（run 入口
+#   环×双零门会拦——vibe 装配必须给非零 max_rounds）。
+# ==========================================================
+
+[meta]
+schema_version = "2.0"
+space_version = "1.0"
+name = "vibe_space"
+dialect = "moonspace"
+prefix = "Vibe"
+
+[space]
+strategy = "Mealy"
+effects_trait_open = true
+interpretation = "cps"
+
+# ---- Context（相位数据槽位）----
+[[space.context]]
+name = "goal"
+type = "String?"
+semantics = "slot"
+doc = "任务目标（TaskReady 装填；轮内不变）"
+
+[[space.context]]
+name = "check_reason"
+type = "String?"
+semantics = "slot"
+doc = "最近一次 check 失败载荷（CheckFailed 落槽；Fixing 相位读）"
+
+[[space.context]]
+name = "result_summary"
+type = "String?"
+semantics = "slot"
+doc = "终局摘要（CheckGreen 落槽；Completed 出口读）"
+
+# ---- 事件 ----
+[[space.events]]
+name = "TaskReady"
+payload = [{ name = "goal", type = "String" }]
+
+[[space.events]]
+name = "ActDone"
+payload = [{ name = "note", type = "String" }]
+
+[[space.events]]
+name = "CheckGreen"
+payload = [{ name = "note", type = "String" }]
+
+[[space.events]]
+name = "CheckFailed"
+payload = [{ name = "reason", type = "String" }]
+
+# ---- 效应 ----
+# LLMAct：模型执行当前相位动作（command——计费调用须审计）；instruction
+# 由转移 args 按名投影事件 payload（goal/reason）。
+[[space.effects]]
+name = "LLMAct"
+semantics = "command"
+payload = [{ name = "instruction", type = "String" }]
+
+# ShellCheck：验证命令（moon check）经工具面（白名单内）——结果拆臂
+# 在 handler（口径见头注）。
+[[space.effects]]
+name = "ShellCheck"
+semantics = "command"
+
+# ---- 具名守卫：零声明（相位机无数据条件谓词——分支已收进拆臂）----
+
+# ---- 状态 ----
+[[space.states]]
+name = "Idle"
+is_initial = true
+
+[[space.states]]
+name = "Drafting"
+doc = "起草相位（LLMAct write 已发出待供方）"
+
+[[space.states]]
+name = "Checking"
+doc = "验证相位（ShellCheck 已发出待回执）"
+
+[[space.states]]
+name = "Fixing"
+doc = "修复相位（LLMAct fix 已发出待供方）"
+
+[[space.states]]
+name = "Answered"
+doc = "吸收终态（check 绿落摘要；Completed 出口）"

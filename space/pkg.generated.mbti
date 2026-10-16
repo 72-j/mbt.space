@@ -1,0 +1,135 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "thy1016/moonspace/space"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub let effect_semantics : Array[String]
+
+// Errors
+pub(all) suberror GuardClosureError {
+  MissingPredicates(missing~ : Array[String])
+} derive(@debug.Debug)
+pub fn GuardClosureError::to_repr(Self) -> @debug.Repr
+
+// Types and methods
+pub(all) struct AssignSpec {
+  slot : String
+  from_field : String
+}
+
+pub(all) struct BridgeSpec {
+  from_state : String
+  to_event : String
+}
+
+pub(all) enum CtxValue {
+  Text(String)
+  Texts(Array[String])
+  JsonVal(Json)
+}
+
+pub(all) struct EffectSpace {
+  name : String
+  states : Array[String]
+  initial_state : String
+  events : Array[EventSpec]
+  effects : Array[EffectSpec]
+  rules : Array[TransitionRule]
+  feedback_routers : Array[FeedbackRouter]
+  loop_guard : LoopGuardSpec?
+}
+pub fn EffectSpace::check_guards_closed(Self, Map[String, (Map[String, CtxValue]) -> Bool]) -> Unit raise
+pub fn EffectSpace::effect_semantics_of(Self, String) -> String
+pub fn EffectSpace::event_boot(Self, String, Map[String, CtxValue]) -> LoopEvent
+pub fn EffectSpace::event_spec(Self, String) -> EventSpec?
+pub fn EffectSpace::has_transition_cycle(Self) -> Bool
+pub fn EffectSpace::is_absorbing(Self, String) -> Bool
+pub fn EffectSpace::loopback_target(Self, String) -> String
+pub fn EffectSpace::make_loopback(Self, FeedbackRouter, Map[String, CtxValue]) -> LoopEvent
+pub fn EffectSpace::router_for(Self, String) -> FeedbackRouter?
+pub fn EffectSpace::step(Self, String, LoopEvent, Map[String, CtxValue], Map[String, (Map[String, CtxValue]) -> Bool]) -> StepOutcome
+
+pub(all) struct EffectSpec {
+  name : String
+  semantics : String
+}
+
+pub(all) struct EventSpec {
+  name : String
+  payload_fields : Array[String]
+}
+
+pub(all) struct FeedbackRouter {
+  from_state : String
+  to_event : String
+}
+
+pub(all) struct LoopEffect {
+  name : String
+  args : Array[CtxValue]
+}
+
+pub(all) struct LoopEvent {
+  name : String
+  payload : Map[String, CtxValue]
+}
+
+pub(all) struct LoopGuardSpec {
+  max_rounds : Int
+  timeout_ms : Int
+}
+
+pub(all) struct ParallelEvent {
+  side : ParallelSide
+  event : LoopEvent
+}
+
+pub(all) struct ParallelForm {
+  name : String
+  member0 : EffectSpace
+  member1 : EffectSpace
+  sync : Array[String]
+  reachable : Array[(String, String)]
+}
+
+pub(all) enum ParallelSide {
+  Left
+  Right
+}
+
+pub(all) struct SeriesForm {
+  name : String
+  source : EffectSpace
+  target : EffectSpace
+  bridges : Array[BridgeSpec]
+}
+
+pub struct Step {
+  next_state : String
+  effect : LoopEffect?
+  assigns : Array[(String, CtxValue)]
+}
+
+pub(all) enum StepOutcome {
+  Stepped(Step)
+  GuardRejected(String)
+  MissingGuard(String)
+  NoRule
+}
+
+pub(all) struct TransitionRule {
+  from_state : String
+  on_event : String
+  to_state : String
+  effect_name : String?
+  guard_name : String?
+  args : Array[String]
+  assigns : Array[AssignSpec]
+}
+
+// Type aliases
+
+// Traits
