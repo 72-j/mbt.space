@@ -1,0 +1,15 @@
+// examples:示例 loop 自证包（moon run examples——合同→门→大 loop 全栈一跑）
+import {
+  "moonbitlang/async",
+  "thy1016/moonspace/gen",
+  "thy1016/moonspace/runtime",
+  "thy1016/moonspace/space",
+}
+
+pkgtype(kind: "executable")
+
+// native 本相:async main 依赖 async 库 wasm 入口 run_async_main,
+// 现版 wasm-gc 面缺——库面(space/gen/runtime)后端中立可 wasm,
+// 本包可执行面暂 native;async 库入口齐后撤钉
+
+supported_targets = "native"
