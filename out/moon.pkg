@@ -12,3 +12,12 @@ import {
   "thy1016/moonspace/gen",
   "thy1016/moonspace/space",
 } for "test"
+
+// wasm 面:黄金门读真文件,测试面整面 native(helper 同包共享,拆件即 unbound)
+
+options(
+  targets: {
+    "gen_gate_test.mbt": [ "native" ],
+    "parity_gate_test.mbt": [ "native" ],
+  },
+)

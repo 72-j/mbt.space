@@ -20,3 +20,18 @@ import {
   "moonbitlang/core/encoding/utf8",
   "thy1016/moonspace/space",
 } for "test"
+
+// wasm 面:测试面=对照门(读真实 domain toml),整面 native;
+// 主面(合同解析/门判)后端中立——wasm-gc check 全绿
+
+options(
+  targets: {
+    "composition_gate_test.mbt": [ "native" ],
+    "contract_gate_test.mbt": [ "native" ],
+    "dep_gate_test.mbt": [ "native" ],
+    "reach_gate_test.mbt": [ "native" ],
+    "space_gate_test.mbt": [ "native" ],
+    "stub_gate_test.mbt": [ "native" ],
+    "trait_probe_test.mbt": [ "native" ],
+  },
+)

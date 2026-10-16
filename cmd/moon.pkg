@@ -7,3 +7,8 @@ import {
 }
 
 pkgtype(kind: "executable")
+
+// native 本相:再生入口读 domain/*.toml(fs 面);可执行缺省 wasm
+// 后端,跑法必带 --target native
+
+supported_targets = "native"
