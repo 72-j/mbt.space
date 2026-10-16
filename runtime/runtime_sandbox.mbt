@@ -2,22 +2,22 @@
 // 职责：约束副作用执行——Port 权限/资源限制/超时/重试/审计，防
 // effect 逃逸到生产数据（.mingspace/sandbox.md 划界）。
 //
-// 形态裁定（役4，勘 moonxllm 消费面后拍）：
+// 形态裁定（役4，勘 moonagentic 消费面后拍）：
 //   ① async 化——EffectHandler 直返形（async 对位 CPS 单层：每效应
 //     恰一次解释、结果事件立返喂回；禁嵌套/禁捕获语义不变，R-2）。
-//     对位 moonxllm LLMProvider.chat async 面。
-//   ③ 执行错哨兵回执（moonxllm dispatch_one 先例）：handler 域内错
+//     对位 moonagentic LLMProvider.chat async 面。
+//   ③ 执行错哨兵回执（moonagentic dispatch_one 先例）：handler 域内错
 //     **应自转哨兵事件回灌**（正道）；逃逸错 ⇒ Runner HandlerError
 //     拦停上报（审计 outcome="failed"），与合同面停摆（DeadEnd）
 //     分列（R-8）。
-//   ④ 端口中立：moonxllm 适配（SpaceHandler/PolicyEngine 翻译）落
+//   ④ 端口中立：moonagentic 适配（SpaceHandler/PolicyEngine 翻译）落
 //     对方 cmd/X3 装配位，本包不见业务词（R-4）。
 //
 // v1 口径（A4 在册）：LoopBack 仅纯装填步到达 router 源态触发；
 // LoopBack payload = to_event payload 字段按名取 ctx，缺键缺省空文本；
 // handler 同步完成语义由 async 直返天然保证。
 // 预算：max_rounds/timeout_ms/effect_timeout_ms/max_retries 皆 0 =
-// 不启用该项——空间有环且全零 = 入口门拦停（moonxllm 评审 A3，
+// 不启用该项——空间有环且全零 = 入口门拦停（moonagentic 评审 A3，
 // UnboundedCycle；原"自担"口径升级为机械钉）。
 //
 // R-2 补全役（2026-10-11，六件一次拍掉）：
@@ -39,7 +39,7 @@
 
 ///|
 /// 效应解释 port（跨包 Port 实现面，pub(open)）——直返结果事件；
-/// 域内错自转哨兵事件（moonxllm 哨兵回执先例），禁随意 raise 逃逸。
+/// 域内错自转哨兵事件（moonagentic 哨兵回执先例），禁随意 raise 逃逸。
 pub(open) trait EffectHandler {
   async fn handle(self : Self, effect : @space.LoopEffect) -> @space.LoopEvent
 }
@@ -114,7 +114,7 @@ pub struct LoopReport {
 }
 
 ///|
-/// run 入口门错（moonxllm 评审 A3：环 × 双零预算组合拦停）
+/// run 入口门错（moonagentic 评审 A3：环 × 双零预算组合拦停）
 pub(all) suberror RunGateError {
   UnboundedCycle(space~ : String)
 } derive(Debug)
@@ -127,7 +127,7 @@ pub extend RunGateError with @moonbitlang/core/debug.Debug::{to_repr}
 /// 取消 + 观测）。CPS 单层 async 对位：boot 事件起步 → step → 有效应
 /// 则 handler 解释（失败重试）→ 结果事件喂回续步 → 纯装填步到达 router
 /// 源态则显式 LoopBack → 吸收态完成 / 预算拦停 / 取消 / 停摆上报。
-/// 入口双门（moonxllm 评审 A2/A3）：守卫闭合核对（缺谓词入口拦停，
+/// 入口双门（moonagentic 评审 A2/A3）：守卫闭合核对（缺谓词入口拦停，
 /// 不等运行中 MissingGuard 停摆）+ 环×双零预算组合门（规则图有环且
 /// 轮径/墙钟双零 = 无界自担，UnboundedCycle 拦停）。
 pub async fn[T : EffectHandler] run(

@@ -15,7 +15,7 @@
 | # | 决策 | 出处 |
 |---|---|---|
 | M1 | **定位**：MoonBit 生态的 Agent 解空间基础设施包——端口中立；MoonRDB 是第一个参考实现，不是绑定依赖 | `README.mbt.md` + `.mingspace/sandbox.md` `[定案]` |
-| M2 | **缘起**：为 moonxllm 的 agent 写沙箱 loop（2026-10-11 用户令）——agent loop 代数化：LLM 是纯函数，工具是效应，handler 是解释器，守卫是不变量，观测流是轨迹 | `.mingspace/agent.md` `[定案]` |
+| M2 | **缘起**：为 moonagentic 的 agent 写沙箱 loop（2026-10-11 用户令）——agent loop 代数化：LLM 是纯函数，工具是效应，handler 是解释器，守卫是不变量，观测流是轨迹 | `.mingspace/agent.md` `[定案]` |
 | M3 | **内核形态**：Mealy 纯转移 `State × Event → (State × Effect)`；effect 由 handler 解释；CPS **单层** continuation；禁任意 continuation 捕获；持久化/权限/审计留 Port 层 | `.mingspace/effect.md` `[定案]` |
 
 ## 2 三沙箱 + 一生成器
@@ -64,9 +64,9 @@
   `merge_effects="union"`；guard 两值 `0`（= 不启用）；payload/args/
   assign/assign_from/sync/adapter/router 缺省空。
 
-## 4.5 役4 定案（2026-10-11，沙箱大 loop；勘 moonxllm 消费面后拍）
+## 4.5 役4 定案（2026-10-11，沙箱大 loop；勘 moonagentic 消费面后拍）
 
-**缘起勘验**（T-5/R-6 收账）：moonxllm `agent/` ToolLoop = "裸 loop"
+**缘起勘验**（T-5/R-6 收账）：moonagentic `agent/` ToolLoop = "裸 loop"
 现实版——policy 门/哨兵回执/EpisodeLog 散装自命，**无解空间**（无合法
 状态/事件/effect 词表约束）；尾递归 turn ↔ CPS 单层形一致。四拍：
 
@@ -74,8 +74,8 @@
 |---|---|---|
 | ① | **async 化**：`EffectHandler` 直返形（async 对位 CPS 单层——每效应恰一次解释、结果立返喂回；禁嵌套/捕获语义不变），runner = `async fn run[T : EffectHandler]` | `runtime/runtime_sandbox.mbt` |
 | ② | **CtxValue 加 `JsonVal(Json)` 臂**（工具参数 Json 载荷对位；`Json` 为内建型，space 仍零引包） | `space/loop_types.mbt` |
-| ③ | **执行错哨兵回执**（moonxllm `dispatch_one` 先例）：handler 域内错自转哨兵事件回灌；逃逸错 ⇒ runner `Termination::HandlerError` 拦停（audit outcome="failed"），与合同面 `DeadEnd` 分列（R-8） | `runtime/` |
-| ④ | **端口中立**：moonspace 不进 moonxllm agent 包白名单，适配（SpaceHandler/PolicyEngine→guards 翻译）落对方 cmd/X3 装配位 | 边界裁定 |
+| ③ | **执行错哨兵回执**（moonagentic `dispatch_one` 先例）：handler 域内错自转哨兵事件回灌；逃逸错 ⇒ runner `Termination::HandlerError` 拦停（audit outcome="failed"），与合同面 `DeadEnd` 分列（R-8） | `runtime/` |
+| ④ | **端口中立**：moonspace 不进 moonagentic agent 包白名单，适配（SpaceHandler/PolicyEngine→guards 翻译）落对方 cmd/X3 装配位 | 边界裁定 |
 
 **运行语义 v1 `[定案]`**：
 - **LoopBack 落点** = to_event 的**首个规则源态**（回灌落回受理该事件
@@ -94,7 +94,7 @@
 ## 4.6 装配役钉（2026-10-11 三钉三补，用户拍）
 
 **三钉**：
-1. **SpaceHandler 适配**：落 moonxllm cmd 装配位；`LLMCall` →
+1. **SpaceHandler 适配**：落 moonagentic cmd 装配位；`LLMCall` →
    `LLMProvider.chat(LlmContext)`、`ToolExec` → `ToolRegistry.call`（炸转
    哨兵回执，`dispatch_one` 先例）。
    **词表拆臂 `[定案]`（钉①补）**：供方翻译位把世界翻成**已判定事件**——
@@ -106,7 +106,7 @@
    `ResourceLimit.max_rounds`（轮径换算，A4 在册）；`allow_tool` 不进
    guards（**R-9 入册**：guards 只判解空间数据条件，带外部语义的门留
    handler 域内哨兵面）；guards 面留给词表数据条件谓词。
-3. **与 X3 同窗口**：并的实体 = `moonxllm/cmd/main.mbt` + `cmd/moon.pkg`
+3. **与 X3 同窗口**：并的实体 = `moonagentic/cmd/main.mbt` + `cmd/moon.pkg`
    装配面；顺序 = X3 先立 cmd 骨架、装配役随后插。
    **不互碰判据 `[定案]`（钉③补）= 符号级，非行区间**：X3 拥有
    provider/registry/experience 装配符号 + ExperienceStore 实现；装配役
@@ -120,9 +120,9 @@
 `last_answer ← answer` 漏网即逮）→ X3 cmd 骨架 → SpaceHandler 插装
 （✅ 2026-10-11：workspace 立 + `cmd/space_assembly.mbt`）→ 真网贯通
 （✅ 2026-10-11：`Answered rounds=2 audit=1 term=Completed` + GLM 原话
-入经验回灌——缘起闭环，moonxllm agent 沙箱 loop 真跑）。
+入经验回灌——缘起闭环，moonagentic agent 沙箱 loop 真跑）。
 
-**真网贯通实证（装配役收口）**：`AGENT_GOAL="…" moon run moonxllm/cmd`
+**真网贯通实证（装配役收口）**：`AGENT_GOAL="…" moon run moonagentic/cmd`
 → GLM 真网 → 沙箱大 loop → Answered 吸收。三修链（诊断靠 term= 渲染
 逐层剥）：① 供方对钉正（`glm-coding` + `glm-5.3-flash`，X2 实证链；
 `glm` 供方模型表无 flash → 开仓第三门 EndpointError 如实拦）；
@@ -177,10 +177,10 @@ R-4）。
 **残余排序（todo R 台账同步）**：typed codegen（A2 先行）> 组合运行
 形+剪枝 > 属性骨架（R-3 联动）> stub 生成 > sample 生成。
 
-## 4.8 合同门三颗牙定案（2026-10-12，moonxllm 评审 A 组收编）
+## 4.8 合同门三颗牙定案（2026-10-12，moonagentic 评审 A 组收编）
 
-> 出处：`moonxllm/.mingspace/moonspace_review.md` A 组（"合同门再补三颗牙"），
-> 整合推进役（moonxllm 进度参照）一次拍掉。B/C 组已随 R-2 收（§4.5
+> 出处：`moonagentic/.mingspace/moonspace_review.md` A 组（"合同门再补三颗牙"），
+> 整合推进役（moonagentic 进度参照）一次拍掉。B/C 组已随 R-2 收（§4.5
 > 联动，提交 11fc0ab）。
 
 - **A1 回灌投影闭合**：`check_composition` + `attach_feedback` 双位
@@ -219,7 +219,7 @@ R-4）。
   词表数据（effects/events/prefix——宪法业务词零渗入）；semantics
   标签填空注记 = 模板指令集（宪法唯一可硬编面：query/command/
   commit/rollback/stop 五标签对位注记）。
-- **三段式骨架**（moonxllm cmd/SpaceHandler 手写先例可产形）：match
+- **三段式骨架**（moonagentic cmd/SpaceHandler 手写先例可产形）：match
   臂集（全 effect 词表臂 + 未知效应兜底 fail 逃逸臂）+ semantics 注
   记随臂 + 哨兵回执注记与 LoopEvent 构造型样例（词表首事件发射）+
   事件词表闭合清单 + struct 命名 `<Prefix>HandlerStub`。
@@ -236,13 +236,13 @@ R-4）。
 - 役1–2 立项：合同五件 + 四包骨架 + 收编独立模块（proj_dialect v1.6）。
 - 役3 解析役（§4）：解析器三入口 + 三门 + 对照门 + assign_from 拍②。
 - 役4 沙箱大 loop（§4.5）：数据驱动运行形 + async runner + 四环集成门
-  （勘 moonxllm 消费面后拍四点）。
-- 合同门三颗牙（§4.8）：moonxllm 评审 A 组收编——A1 回灌投影闭合
+  （勘 moonagentic 消费面后拍四点）。
+- 合同门三颗牙（§4.8）：moonagentic 评审 A 组收编——A1 回灌投影闭合
   （gen 双位钉 + reasoning TOML 同笔迁移）/ A2 守卫闭合 run 入口前移 /
   A3 环×双零组合门。
 - handler stub 生成（§4.9）：R-7 收编——out/stub_out/ 非编译文本区 +
   emit_handler_stub 纯函数 + 三段式骨架 + 双门（黄金逐字节/结构）。
-- **下一役候选**：moonxllm 装配役（cmd/X3 位 SpaceHandler 适配 +
+- **下一役候选**：moonagentic 装配役（cmd/X3 位 SpaceHandler 适配 +
   PolicyEngine→guards 翻译，拍④落点）；typed codegen 役（仍列后续；
   `space` 接缝注释签名三件待生成）；verify 役（A3 探针）。
 
@@ -251,7 +251,7 @@ R-4）。
 | # | 事项 | 背景 |
 |---|---|---|
 | A1 | `[待裁]` feedback 守卫触发后的**上报面形态**：非法转移域上报如何接 runtime 审计（词表不携带重试策略已定，上报通道未定） | `composition.toml` 头注 |
-| A2 | `[收账→定案]`（2026-10-11 用户拍"A2 继续"）：codegen 产物包 = **`moonspace/out/`**——生成物 `*_gen.mbt` 纯生成禁手写 + `stubs.mbt` 手写填空区（宪法：两区永不拼接）；发射通道 = **`moonspace/cmd/` 再生入口**（moonxllm 同款，`moon run moonspace/cmd` 重跑写盘）；黄金门 = **out 内重生成 ≡ 入库产物逐字节**。emit 面纯函数（gen 包，String 出口）与落盘面（cmd）分离。typed 产物 v1 范围：State/Event/Effect 枚举（positional）+ Ctx struct + typed step（守卫 `(String, Ctx) -> Bool` 注入，guard 拒 = None；assign 结构体更新式拷贝）；与数据驱动解释器的行为对拍门 = typed codegen 次格 | 宪法「生成器 evolvability」+ moonxllm gen.mbt 先例 |
+| A2 | `[收账→定案]`（2026-10-11 用户拍"A2 继续"）：codegen 产物包 = **`moonspace/out/`**——生成物 `*_gen.mbt` 纯生成禁手写 + `stubs.mbt` 手写填空区（宪法：两区永不拼接）；发射通道 = **`moonspace/cmd/` 再生入口**（moonagentic 同款，`moon run moonspace/cmd` 重跑写盘）；黄金门 = **out 内重生成 ≡ 入库产物逐字节**。emit 面纯函数（gen 包，String 出口）与落盘面（cmd）分离。typed 产物 v1 范围：State/Event/Effect 枚举（positional）+ Ctx struct + typed step（守卫 `(String, Ctx) -> Bool` 注入，guard 拒 = None；assign 结构体更新式拷贝）；与数据驱动解释器的行为对拍门 = typed codegen 次格 | 宪法「生成器 evolvability」+ moonagentic gen.mbt 先例 |
 | A3 | `[收账→定案]`（2026-10-11 探针实证）：proof_* **关键字面不在现役工具链**（verify.md 断言陈旧，两形皆 [4021]/[3002]）；`moon prove` 真存但 **Why3 系**（.mbtp 模型面 + proof_assert + SMT solver，环境缺 z3/cvc5/alt-ergo）——prove 面挂台账待装机；**现役面 = 轻量霍尔先形 `check_triple`（泛型三元组，空洞真语义）+ core 内建 `@qc.check` 属性双轨**（零依赖，已落 verify 首件：词表闭合属性 + 三元组确定性面） | A3 探针 + `verify/contracts.mbt` + `property_test.mbt` |
 | A4 | `[待裁]` LoopBack **携带策略与轮径精化**：payload 投影规则扩展（跨槽改名携带）、轮径是否改效应步径、异步 handler 形扩展（真 Port 中途取消） | 役4 v1 口径见 §4.5 |
 

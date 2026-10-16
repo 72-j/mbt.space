@@ -4,7 +4,7 @@
 # 任务级工作流子状态机（役V3；"AI 生成子状态机"完全体首格）：vibe
 # coding 的 write→check→fix 环固化为相位机——状态机管流程纪律
 # （没 check 绿不算完成），LLM 管每步内容（LLMAct 相位指令）。
-# 消费位 = moonxllm cmd/vibe_assembly（AGENT_MODE=vibe 分派）。
+# 消费位 = moonagentic cmd/vibe_assembly（AGENT_MODE=vibe 分派）。
 #
 # ★ check 拆臂口径（agent_space LLMResponse 拆臂同款）：ShellCheck
 #   效应的 handler 按退出码把世界翻成已判定事件——exit 0 → CheckGreen /

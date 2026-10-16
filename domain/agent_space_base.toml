@@ -1,8 +1,8 @@
 # ==========================================================
 # moonspace 2.0 Domain TOML —— AgentSpace 骨架文件（词表声明面）
 #
-# 装配役词表合同对（moonxllm ToolLoop 控制面解空间化；消费位 =
-# moonxllm cmd/X3 装配位，拍④——moonspace 不进 agent 包白名单）。
+# 装配役词表合同对（moonagentic ToolLoop 控制面解空间化；消费位 =
+# moonagentic cmd/X3 装配位，拍④——moonspace 不进 agent 包白名单）。
 #
 # ★ 事件拆臂口径（2026-10-11 钉①补）：供方翻译位把世界翻成已判定
 #   事件——LLM 供方一次响应（LLMResponse）按 stop 值拆臂：

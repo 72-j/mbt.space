@@ -71,7 +71,7 @@ doc = "CheckGreen 只从 Checking 出发——没 check 绿不算完成（相位
 # fields：exit_code=check 退出码；error_count=错误文本非空行数（绿=0）；
 # first_error=错误文本首个非空行（截 200，绿=""）。
 # 注：gen 解析面暂不读 cell 键（持久合同——未知键忽略），消费位 =
-# moonxllm/cmd vibe_assembly 手写摘要（①CellHandler 路线格3 前拍）。
+# moonagentic/cmd vibe_assembly 手写摘要（①CellHandler 路线格3 前拍）。
 [[space.cell]]
 name = "shell_check_summary"
 effect = "ShellCheck"

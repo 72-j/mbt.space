@@ -28,9 +28,9 @@ MoonBit 生态的 Agent 解空间基础设施独立模块（`thy1016/moonspace`�
   （骨架/行为切，对齐 ADR-1）
 - `reasoning_base.toml` / `reasoning_domain.toml` —— 演示空间二
 - `agent_space_base.toml` / `agent_space_domain.toml` —— 装配正身
-  词表（moonxllm agent_space 同源）
+  词表（moonagentic agent_space 同源）
 - `vibe_space_base.toml` / `vibe_space_domain.toml` —— 任务级相位
-  机（write→check→fix 环；moonxllm vibe_space 同源）
+  机（write→check→fix 环；moonagentic vibe_space 同源）
 - `composition.toml` —— 组合面：parallel（张量积）/ series（串联）/
   feedback（反馈，守卫必填）
 
@@ -87,8 +87,23 @@ moon run cmd --target native        # 合同再生（改 domain/*.toml 后）
   成员目录内裸跑 `moon test` 会跑全 workspace，按包过滤才是本模块
   自己的门。
 
+## 宿主集合（引擎论）
+
+moonspace 是被嵌的确定性内核，宿主集合开放——不是宿主跑在
+moonspace 里，而是 moonspace 作为引擎库跑在宿主里（同一二进制静
+态链接，loop 骨架在 moonspace、效应回调宿主 handler）：
+
+- **moonagentic**（agent 宿主，在役）：LLM 出机 → 五门 → 大 loop 真网；
+- **moonrdb**（数据管线宿主，合同已备未接）：domain 的
+  retrieval/reasoning 合同对（`BM25Search`/`VectorSearch`/`LLMCall`
+  词表）即检索管线速写，缺 handler 真身与预算面；
+- **浏览器**（人闸 UI 宿主，挂账）：见下方 wasm 面条目。
+
+嵌入身份 = **编排面非存储面**——数据访问仍走宿主自己的 port，
+moonspace 不当 DAO。
+
 ## 相关
 
 - 本仓：<https://gitlink.org.cn/thy7/mbt.space>
-- 宿主仓：<https://gitlink.org.cn/thy7/BitBang>（moonxllm = 首个
+- 宿主仓：<https://gitlink.org.cn/thy7/BitBang>（moonagentic = 首个
   完整装配：LLM 出机 → 五门 → 大 loop 真网在役）

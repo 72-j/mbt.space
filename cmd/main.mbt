@@ -1,9 +1,9 @@
-// ===== moonspace/cmd —— typed codegen 再生入口（A2 落形，moonxllm cmd 同款）=====
+// ===== moonspace/cmd —— typed codegen 再生入口（A2 落形，moonagentic cmd 同款）=====
 // 用法：仓根 `moon run moonspace/cmd --target native` 或独立仓模块根
 // `moon run cmd --target native`（双路锚点探测，dep_gate 先例）——读
 // domain/*.toml 对 → emit → 写 out/spaces_gen.mbt；黄金门
 // out/gen_gate_test.mbt 逐字节对拍。
-// 役R-6 续格：agent_space 对入列（moonxllm 装配正身词表进 typed 产物）
+// 役R-6 续格：agent_space 对入列（moonagentic 装配正身词表进 typed 产物）
 
 ///|
 /// 锚点探测（dep_gate 双路先例）：宿主 workspace 仓根 cwd（锚

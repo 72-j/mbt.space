@@ -1,6 +1,6 @@
 // ===== moonspace/gen —— handler stub 发射器（R-7，装配役战训新格）=====
 // 口径（spec §4.7）：per-space match 臂/哨兵回执/fail 逃逸三段式骨架
-// ——新消费者 = TOML 对 + stub 填空（moonxllm cmd/SpaceHandler 手写
+// ——新消费者 = TOML 对 + stub 填空（moonagentic cmd/SpaceHandler 手写
 // 先例的可产形）。发射器只见词表数据（宪法：业务词零渗入生成器）；
 // semantics 标签注记 = 模板指令集（宪法唯一可硬编面）。产物 = 非编译
 // 文本区 out/stub_out/（消费者拷贝填空，禁回写本产物；fmt 禁面——
@@ -57,7 +57,7 @@ pub fn emit_handler_stub(base : SpaceBase) -> String {
     "// 再生：moon run moonspace/cmd（黄金门 out/gen_gate_test.mbt 逐字节）\n",
   )
   b.write_string(
-    "// 三段式口径（moonxllm cmd/SpaceHandler 手写先例）：\n",
+    "// 三段式口径（moonagentic cmd/SpaceHandler 手写先例）：\n",
   )
   b.write_string(
     "//   拆臂——供方/世界一次响应按判定值拆成已判定事件（拆臂判定在本包）；\n",
