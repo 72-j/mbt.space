@@ -370,7 +370,7 @@ pub fn check_composition(
     let host_events = name_set(host.events.map(fn(event) { event.name }))
     // A1 回灌投影闭合：to_event 的 payload 字段须 ⊆ 宿主 ctx 槽位——
     // make_loopback 按字段名取 ctx，缺键静默空文回灌（指错字段名的
-    // router 每轮空转，无门能红——moonagentic 评审 A1 拍）
+    // router 每轮空转，无门能红——评审 A1 拍）
     let host_context = name_set(host.context.map(fn(field) { field.name }))
     let host_payloads : Map[String, Map[String, Bool]] = Map([])
     for event in host.events {

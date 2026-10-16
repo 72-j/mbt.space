@@ -71,14 +71,14 @@ scope_gate 先例）。
 役4 注）；`runtime` 只向下依赖 space；`verify` 只吃 State/Event/Effect/
 Transition/Invariant——**零真实 Port**（RocksDB / LLM / Git 一概不见）；
 `gen` 向下依赖 space（词表核对唯一去向）。沙箱间禁平级互依；业务词随
-R-4 同族禁进 space / verify；moonagentic 适配只落对方 cmd/X3 装配位
+R-4 同族禁进 space / verify；宿主适配只落宿主 cmd 装配位
 （役4 拍④，moonspace 不进 agent 包白名单）。
-理由：面界由依赖门钉死，拆完不许长回去（moonrdb ②层分文件 D-17
+理由：面界由依赖门钉死，拆完不许长回去（②层分文件 D-17
 同族纪律）。
 落点：各包 `moon.pkg` import 面；机械化 scope 门件随 codegen 役补
-（moonrdb hex-gate 同款，todo.md R-4 台账）。
+（hex-gate 同款，todo.md R-4 台账）。
 
-## R-8 错误面不穿透 [定案](役3 立,moonrdb R-1/D-18 同族)
+## R-8 错误面不穿透 [定案](役3 立,R-1/D-18 同族)
 
 **ContractError 是合同面唯一错误型**：解析/核对错
 （MissingKeyErr / TypeErr / ValueErr）不与将来 runtime 的执行错
@@ -91,9 +91,9 @@ R-4 同族禁进 space / verify；moonagentic 适配只落对方 cmd/X3 装配�
 **guards 只判解空间数据条件**：守卫谓词入参 = ctx 槽位（C-21 白盒面，
 `has_hits` 形）；**带外部语义的门禁塞守卫**——工具许可（Json 参数 +
 policy 引擎语义）留 handler 域内哨兵面（policy 判否 → 哨兵事件回灌，
-moonagentic `dispatch_one` 先例），判否走 `ToolDenied` 事件回灌续轮而非
+宿主 dispatch 先例），判否走 `ToolDenied` 事件回灌续轮而非
 GuardRejected。
 理由：守卫判「解空间数据条件成立否」，许可判「外部世界允否」——两类
 谓词的输入面/失败语义/审计去向全不同，混装 = 面混（R-8 同族）。
-落点：装配位 SpaceHandler（moonagentic cmd）；`agent_space_*.toml` 守卫
+落点：装配位 SpaceHandler（宿主 cmd）；`agent_space_*.toml` 守卫
 零声明即本条实证；verify 守卫谓词面。

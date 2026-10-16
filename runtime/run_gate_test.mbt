@@ -1,4 +1,4 @@
-// ===== moonspace/runtime —— run 入口双门测试（moonagentic 评审 A2/A3）=====
+// ===== moonspace/runtime —— run 入口双门测试（评审 A2/A3）=====
 // A2 守卫闭合：rules 引用的 guard_name ⊄ 注入谓词表 ⇒ 入口
 //   GuardClosureError 拦停（不等运行中 MissingGuard 停摆）。
 // A3 环×双零：规则图有环（效应步回灌环）且轮径/墙钟双零 ⇒

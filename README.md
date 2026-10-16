@@ -27,12 +27,12 @@ MoonBit 生态的 Agent 解空间基础设施独立模块（`thy1016/moonspace`�
 - `retrieval_base.toml` / `retrieval_domain.toml` —— 演示空间一
   （骨架/行为切，对齐 ADR-1）
 - `reasoning_base.toml` / `reasoning_domain.toml` —— 演示空间二
-- `agent_space_base.toml` / `agent_space_domain.toml` —— 装配正身
-  词表（moonagentic agent_space 同源）
-- `vibe_space_base.toml` / `vibe_space_domain.toml` —— 任务级相位
-  机（write→check→fix 环；moonagentic vibe_space 同源）
 - `composition.toml` —— 组合面：parallel（张量积）/ series（串联）/
   feedback（反馈，守卫必填）
+
+宿主装配词表（agent_space / vibe_space 等）住宿主自己的仓库
+`domain/`，不入本仓产物面——本仓只携带演示合同对与组合面；新
+消费者 = 自带 TOML 对 + stub 填空。
 
 阳面 = base 词表（态/事件/效应/槽位，只选不发明）；阴面 = 转移表
 （`from/on/to/effect/args` + `assign_from` 糖——效应回执字段落
@@ -79,8 +79,7 @@ moon run cmd --target native        # 合同再生（改 domain/*.toml 后）
   `runtime/` `verify/` `out/` 主面后端中立，wasm-gc check 全绿——
   浏览器嵌入形 = 库面编 wasm 产物 + 宿主 JS 实现 EffectHandler
   （真效应在宿主，正是三沙箱边界的用武之地）。fs 吃用面（gen/out
-  对照门测试件、cmd 再生入口）按文件/包钉 native（先例
-  moonrdb/vector）；`examples/` 可执行面暂 native——async main 依赖
+  对照门测试件、cmd 再生入口）按文件/包钉 native（分件先例）；`examples/` 可执行面暂 native——async main 依赖
   async 库 wasm 入口 `run_async_main`，现版（0.22.4）wasm-gc 面缺，
   入口齐后撤钉。
 - 本模块在宿主仓 bitbang 的 `moon.work` 中为 workspace member：
@@ -93,10 +92,11 @@ moonspace 是被嵌的确定性内核，宿主集合开放——不是宿主跑�
 moonspace 里，而是 moonspace 作为引擎库跑在宿主里（同一二进制静
 态链接，loop 骨架在 moonspace、效应回调宿主 handler）：
 
-- **moonagentic**（agent 宿主，在役）：LLM 出机 → 五门 → 大 loop 真网；
-- **moonrdb**（数据管线宿主，合同已备未接）：domain 的
-  retrieval/reasoning 合同对（`BM25Search`/`VectorSearch`/`LLMCall`
-  词表）即检索管线速写，缺 handler 真身与预算面；
+- **agent 宿主**（在役）：LLM 出机 → 五门 → 大 loop 真网；装配
+  词表（agent_space / vibe_space）住宿主仓；
+- **数据管线宿主**（合同已备未接）：domain 的 retrieval/reasoning
+  合同对（`BM25Search`/`VectorSearch`/`LLMCall` 词表）即检索管线
+  速写，缺 handler 真身与预算面；
 - **浏览器**（人闸 UI 宿主，挂账）：见下方 wasm 面条目。
 
 嵌入身份 = **编排面非存储面**——数据访问仍走宿主自己的 port，
@@ -105,5 +105,3 @@ moonspace 不当 DAO。
 ## 相关
 
 - 本仓：<https://gitlink.org.cn/thy7/mbt.space>
-- 宿主仓：<https://gitlink.org.cn/thy7/BitBang>（moonagentic = 首个
-  完整装配：LLM 出机 → 五门 → 大 loop 真网在役）

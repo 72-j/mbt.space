@@ -1,6 +1,6 @@
 // ===== reasoning_space EffectHandler stub（R-7 生成；拷贝到消费者包填空，禁回写）=====
 // 再生：moon run moonspace/cmd（黄金门 out/gen_gate_test.mbt 逐字节）
-// 三段式口径（moonagentic cmd/SpaceHandler 手写先例）：
+// 三段式口径（宿主 cmd/SpaceHandler 手写先例）：
 //   拆臂——供方/世界一次响应按判定值拆成已判定事件（拆臂判定在本包）；
 //   哨兵回执——域内可恢复错自转哨兵事件回灌（正道，非 raise）；
 //   fail 逃逸——不可恢复错 fail/raise ⇒ Runner HandlerError 拦停。

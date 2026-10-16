@@ -3,7 +3,7 @@
 //（A2 守卫闭合门错面 derive(Debug) 显式 extend）；runtime 向下
 // space + core/debug（A3 门错面）；verify 只吃 space；gen 向下
 // toml+debug+space。白名单全等断言（多即红少亦红）；test 授权面
-// 同钉。业务词（moonrdb/moonagentic/llm）随白名单结构性排除。路径双
+// 同钉。业务词（宿主/数据管线/LLM 供方）随白名单结构性排除。路径双
 // 上下文自适应：workspace 根（./moonspace/…）与模块根（./…）——
 // moon test 两处皆可跑。
 

@@ -1,11 +1,11 @@
 // ===== moonspace/space —— 沙箱大 loop 机器件（数据驱动解空间运行形）=====
-// 形态裁定（役4，勘 moonagentic 消费面后拍）：
+// 形态裁定（役4，勘宿主消费面后拍）：
 //   ① async 化——handler 直返形（async 对位 CPS 单层：k 恰一次施加
 //     即返回；禁嵌套/捕获语义不变，R-2）
-//   ② CtxValue 带 Json 臂（moonagentic 工具参数 Json 载荷对位）
-//   ③ 执行错哨兵回执先例（moonagentic dispatch_one）：handler 应自转
+//   ② CtxValue 带 Json 臂（宿主工具参数 Json 载荷对位）
+//   ③ 执行错哨兵回执先例（宿主 dispatch 单点派发）：handler 应自转
 //     哨兵事件；逃逸错 ⇒ Runner HandlerError 拦停（R-8 分判）
-//   ④ 端口中立——moonagentic 装配只在 cmd/X3 位相接，agent 包白名单不动
+//   ④ 端口中立——宿主装配只在宿主 cmd 装配位相接
 // 数据驱动：词表/转移表是运行时数据（gen 从 domain/*.toml 构造）；
 // typed codegen 路线仍列后续役（spec.md §5）。
 // 本包依赖 = core 标准库面（json），零三方零业务（R-7 豁免注）。
@@ -273,7 +273,7 @@ pub fn EffectSpace::make_loopback(
 }
 
 ///|
-/// 守卫闭合错（moonagentic 评审 A2：运行时 MissingGuard 停摆的前移面）
+/// 守卫闭合错（评审 A2：运行时 MissingGuard 停摆的前移面）
 pub(all) suberror GuardClosureError {
   MissingPredicates(missing~ : Array[String])
 } derive(Debug)
@@ -305,7 +305,7 @@ pub fn EffectSpace::check_guards_closed(
 }
 
 ///|
-/// 规则图环检测（moonagentic 评审 A3）：节点 = 状态，边 = 转移规则
+/// 规则图环检测（评审 A3）：节点 = 状态，边 = 转移规则
 /// from→to；三色 DFS（白/灰/黑），灰遇灰 = 环，自环天然覆盖。
 /// loopback 运行环不属此图（feedback 守卫另有 R-3 门管）
 pub fn EffectSpace::has_transition_cycle(self : EffectSpace) -> Bool {

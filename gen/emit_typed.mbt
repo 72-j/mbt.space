@@ -220,7 +220,7 @@ pub fn emit_space_typed(base : SpaceBase, domain : SpaceDomain) -> String raise 
     let effect_expr = match transition.effect {
       Some(effect_name) =>
         // 无参 effect 发裸构造器（`E()` 常量构造器不可应用——typed
-        // 编译器第三咬：agent_space 首跑实锤）
+        // 编译器第三咬：typed 首跑实锤）
         if transition.args.length() == 0 {
           "Some(" + effect_name + ")"
         } else {

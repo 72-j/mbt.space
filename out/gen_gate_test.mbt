@@ -29,8 +29,6 @@ async test "golden：重生成 ≡ 入库产物逐字节" {
   let pairs = [
     ("retrieval_base.toml", "retrieval_domain.toml"),
     ("reasoning_base.toml", "reasoning_domain.toml"),
-    ("agent_space_base.toml", "agent_space_domain.toml"),
-    ("vibe_space_base.toml", "vibe_space_domain.toml"),
   ]
   let b = StringBuilder()
   b.write_string(
@@ -51,9 +49,7 @@ async test "golden：重生成 ≡ 入库产物逐字节" {
 
 ///|
 async test "golden：handler stub 产物逐字节（R-7，stub_out/ 非编译文本区）" {
-  let bases = [
-    "retrieval_base.toml", "reasoning_base.toml", "agent_space_base.toml",
-  ]
+  let bases = ["retrieval_base.toml", "reasoning_base.toml"]
   for base_rel in bases {
     let base = @gen.parse_space_base(gate_domain(base_rel))
     let emitted = @gen.emit_handler_stub(base)

@@ -90,7 +90,7 @@ fn hello_domain() -> String {
 
 ///|
 /// 罐头效应臂：DoIt → WorkDone（零 LLM；真身效应面在宿主装配位——
-/// moonagentic/cmd VibeHandler 先例）
+/// 宿主 cmd 装配位 VibeHandler 先例）
 struct HelloHandler {}
 
 ///|
